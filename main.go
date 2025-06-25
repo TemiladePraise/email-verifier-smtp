@@ -17,7 +17,7 @@ type VerificationResult struct {
 
 func main() {
     verifier := emailverifier.NewVerifier().
-        DisableSMTPCheck().
+        EnableSMTPCheck().
         EnableDomainSuggest().
         EnableAutoUpdateDisposable()
 
