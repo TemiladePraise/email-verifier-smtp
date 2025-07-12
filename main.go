@@ -16,17 +16,16 @@ type VerificationResult struct {
 }
 
 func main() {
-    verifier := emailverifier.NewVerifier().
-        EnableSMTPCheck().
-        EnableDomainSuggest().
-        EnableAutoUpdateDisposable()
-
     r := mux.NewRouter()
     r.HandleFunc("/v1/{email}/verification", func(w http.ResponseWriter, req *http.Request) {
         vars := mux.Vars(req)
         email := vars["email"]
 
-        result, err := verifier.Verify(email)
+        result, err := emailverifier.NewVerifier().
+            // EnableSMTPCheck(). // Commented out SMTP functionality
+            EnableDomainSuggest().
+            EnableAutoUpdateDisposable().
+            Verify(email)
         w.Header().Set("Content-Type", "application/json")
         if err != nil {
             json.NewEncoder(w).Encode(VerificationResult{Success: false, Error: err.Error()})
